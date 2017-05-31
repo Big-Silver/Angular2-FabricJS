@@ -1,7 +1,8 @@
 <h1>
   {{title}}
 </h1>
-
+<ckeditor [(ngModel)]="myContent" debounce="500"></ckeditor>
+<button (click)="addtext()">Add Text</button>
 <div class="canvas-wrapper">
     <canvas id="canvas" width="500" height="500"></canvas>
 </div>

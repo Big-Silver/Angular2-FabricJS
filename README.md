@@ -64,3 +64,25 @@ UPDATE - Feb - 2017
 import $ from 'jquery';
 //
 $('#elemId').width();
+
+
+In your index.html just add this in the header block:
+<script src="https://cdn.ckeditor.com/4.6.1/full/ckeditor.js"></script>
+
+Install ng2-ckeditor via NPM
+
+npm install ng2-ckeditor --save
+In your app.component.ts add this:
+
+import { CKEditorComponent } from '../../../node_modules/ng2-ckeditor/src/ckeditor.component';
+@NgModule({
+    declarations: [
+        CKEditorComponent
+    ],
+    exports: [
+        CKEditorComponent,
+           ]
+})
+Use editor like this:
+
+<ckeditor [(ngModel)]="myContent" debounce="500"></ckeditor>
