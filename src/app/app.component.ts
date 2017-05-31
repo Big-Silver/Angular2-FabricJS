@@ -16,125 +16,79 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
 
-    fabric.Object.prototype.transparentCorners = false;
-    fabric.Object.prototype.padding = 5;
-    
-     
-  var $ = function(id){return document.getElementById(id)};
+    var SINGLE_LINE = false;
+    var canvas = new fabric.Canvas('canvas');
 
-
-  var canvas =  new fabric.Canvas('c');
-  	canvas.setHeight(300);
-    canvas.setWidth(500);
-   
-
-addtext() { 
-    canvas.add(new fabric.IText('Tap and Type', { 
-        left: 50,
-        top: 100,
-        fontFamily: 'arial black',
-        fill: '#333',
-        fontSize: 50
-    }));
-}
-    
-   document.getElementById('text-color').onchange = function() {
-            canvas.getActiveObject().setFill(this);
-            canvas.renderAll();
-        };
-  document.getElementById('text-color').onchange = function() {
-            canvas.getActiveObject().setFill(this);
-            canvas.renderAll();
-        };
-		
-		document.getElementById('text-bg-color').onchange = function() {
-            canvas.getActiveObject().setBackgroundColor(this);
-            canvas.renderAll();
-        };
-		
-		document.getElementById('text-lines-bg-color').onchange = function() {
-            canvas.getActiveObject().setTextBackgroundColor(this);
-            canvas.renderAll();
-        };
-
-		document.getElementById('text-stroke-color').onchange = function() {
-            canvas.getActiveObject().setStroke(this);
-            canvas.renderAll();
-        };	
-
-		document.getElementById('text-stroke-width').onchange = function() {
-            canvas.getActiveObject().setStrokeWidth(this);
-            canvas.renderAll();
-        };				
-	
-		document.getElementById('font-family').onchange = function() {
-            canvas.getActiveObject().setFontFamily(this);
-            canvas.renderAll();
-        };
-		
-		document.getElementById('text-font-size').onchange = function() {
-            canvas.getActiveObject().setFontSize(this);
-            canvas.renderAll();
-        };
-		
-		document.getElementById('text-line-height').onchange = function() {
-            canvas.getActiveObject().setLineHeight(this);
-            canvas.renderAll();
-        };
-		
-		document.getElementById('text-align').onchange = function() {
-            canvas.getActiveObject().setTextAlign(this);
-            canvas.renderAll();
-        };
-		
-	
- var radios5 = document.getElementsByName("fonttype");  // wijzig naar button
-    for(var i = 0, max = radios5.length; i < max; i++) {
-        radios5[i].onclick = function() {
-            
-            // if(document.getElementById(this.id).checked == true) {
-            //     if(this.id == "text-cmd-bold") {
-            //         canvas.getActiveObject().set("fontWeight", "bold");
-            //     }
-            //     if(this.id == "text-cmd-italic") {
-            //         canvas.getActiveObject().set("fontStyle", "italic");
-            //     }
-            //     if(this.id == "text-cmd-underline") {
-            //         canvas.getActiveObject().set("textDecoration", "underline");
-            //     }
-			// 	if(this.id == "text-cmd-linethrough") {
-            //         canvas.getActiveObject().set("textDecoration", "line-through");
-            //     }
-			// 	if(this.id == "text-cmd-overline") {
-            //         canvas.getActiveObject().set("textDecoration", "overline");
-            //     }
-                
-                
-                
-            // } else {
-            //     if(this.id == "text-cmd-bold") {
-            //         canvas.getActiveObject().set("fontWeight", "");
-            //     }
-            //     if(this.id == "text-cmd-italic") {
-            //         canvas.getActiveObject().set("fontStyle", "");
-            //     }  
-            //     if(this.id == "text-cmd-underline") {
-            //         canvas.getActiveObject().set("textDecoration", "");
-            //     }
-			// 	if(this.id == "text-cmd-linethrough") {
-            //         canvas.getActiveObject().set("textDecoration", "");
-            //     }  
-            //     if(this.id == "text-cmd-overline") {
-            //         canvas.getActiveObject().set("textDecoration", "");
-            //     }
-            // }
-            
-            
-            canvas.renderAll();
-        }
+    // custom input area
+    if (SINGLE_LINE) {
+        var $itext = $('<input/>').attr('type', 'text').addClass('itext');
     }
-  
+    else {
+        var $itext = $('<textarea/>').addClass('itext');
+    }
 
+    var text = 'enter multi-byte text here ';
+    var itext = new fabric.IText(text, {
+        left: 100,
+        top: 100,
+        fontSize: 20,
+        fill: '#000'
+    })
+    .on('editing:entered', function(e) {
+        var obj = this;
+        if (SINGLE_LINE) {
+            var keyDownCode = 0;
+        }
+
+        canvas.remove(obj);
+        
+        // show input area
+        $itext.css({
+            left: obj.left,
+            top: obj.top,
+            'line-height': obj.lineHeight,
+            'font-family': obj.fontFamily,
+            'font-size': Math.floor(obj.fontSize * Math.min(obj.scaleX, obj.scaleY)) + 'px',
+            'font-weight': obj.fontWeight,
+            'font-style': obj.fontStyle,
+            color: obj.fill
+        })
+        .val(obj.text)
+        .appendTo($(canvas.wrapperEl).closest('.canvas-wrapper'));
+
+        // text submit event
+        if (SINGLE_LINE) {
+            // submit text by ENTER key
+            $itext.on('keydown', function(e) {
+                // save the key code of a pressed key while kanji conversion (it differs from the code for keyup)
+                keyDownCode = e.which;
+            })
+            .on('keyup', function(e) {
+                if (e.keyCode == 13 && e.which == keyDownCode) {
+                    obj.exitEditing();
+                    obj.set('text', $(this).val());
+                    $(this).remove();
+                    canvas.add(obj);
+                    canvas.renderAll();
+                }
+            });
+        }
+        else {
+            // submit text by focusout
+            $itext.on('focusout', function(e) {
+                obj.exitEditing();
+                obj.set('text', $(this).val());
+                $(this).remove();
+                canvas.add(obj);
+                canvas.renderAll();
+            });
+        }    
+        // focus on text
+        setTimeout(function() {
+            $itext.select();
+        }, 1);
+    });
+    canvas.add(itext);
+    canvas.setActiveObject(itext);
   }
-
 }

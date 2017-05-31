@@ -1,18 +1,12 @@
- #c{
-     border:1px solid red;
-     top:22px;
-     left:0px;
-     height: 100%;
-     width: 99%;
- }
-
-.box {
-  float: left;
-  margin: 1em;
+.canvas-wrappter {
+    position: relative;
 }
-.after-box {
-  clear: left;
+canvas {
+    border: 1px solid #000;
 }
-
- 
-
+.itext {
+    width: 300px;
+    background: transparent;
+    position: absolute;
+    z-index: 2;
+}
