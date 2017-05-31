@@ -1,0 +1,18 @@
+ #c{
+     border:1px solid red;
+     top:22px;
+     left:0px;
+     height: 100%;
+     width: 99%;
+ }
+
+.box {
+  float: left;
+  margin: 1em;
+}
+.after-box {
+  clear: left;
+}
+
+ 
+
