@@ -8,7 +8,7 @@ declare const fabric: any;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css']    
 })
 export class AppComponent implements OnInit {
     title = 'Hello Angular Fabric!';
@@ -102,12 +102,45 @@ export class AppComponent implements OnInit {
     };
 
     addtext() {
-        this.canvas.add(new fabric.IText('Tap and Type', { 
+        
+        var temp = document.getElementsByClassName('cke_wysiwyg_frame cke_reset');
+        console.log("nodeValue");
+        for(var i = 0; i < temp.length; i++) {
+            temp[i].id = 'iframe';
+            console.log(temp[i].id);            
+        }
+        var iframe = document.getElementById('iframe');
+        console.log(iframe.document);
+        // var y = (iframe.contentWindow || iframe.contentDocument.document);
+
+        // if (y.document)
+        // {
+        //     y = y.document;
+        //     y.getElementsByTagName("input")[0].value;
+        //     alert(y);
+        // }
+
+        // for(var i = temp.childElementCount; i < temp.childElementCount; i++) {
+        //     console.log(temp.previousElementSibling);
+        // }
+        this.canvas.add(new fabric.IText(temp, { 
             left: 50,
             top: 100,
             fontFamily: 'arial black',
             fill: '#333',
                 fontSize: 50
         }));
+        // document.getElementById('ckeditor').addEventListener('change', function (e) {
+        //     console.log("ckeditor");
+        //     console.log(e);
+        // });
+    };
+
+    findElement(element) {
+        for(var i = element.childElementCount; i < element.childElementCount; i++) {
+            console.log(element.previousElementSibling);
+        }
     }
+
+    
 }
