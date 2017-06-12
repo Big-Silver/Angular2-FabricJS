@@ -102,7 +102,6 @@ export class AppComponent implements OnInit {
     };
 
     addtext() {
-        
         var temp = document.getElementsByClassName('cke_wysiwyg_frame cke_reset');
         console.log("nodeValue");
         for(var i = 0; i < temp.length; i++) {
@@ -110,7 +109,11 @@ export class AppComponent implements OnInit {
             console.log(temp[i].id);            
         }
         var iframe = document.getElementById('iframe');
-        console.log(iframe.document);
+        var temp_text = $('iframe').contents().children().children();                                        ; 
+        // var temp_html = $("#iframe").contents().find("body").html();
+        var temp_html = $("#iframe").contents().find("body").html().replace(/<p>/g, '');
+        temp_html = temp_html.replace(/<\/p>/g, '');
+        console.log(temp_html);
         // var y = (iframe.contentWindow || iframe.contentDocument.document);
 
         // if (y.document)
@@ -123,7 +126,7 @@ export class AppComponent implements OnInit {
         // for(var i = temp.childElementCount; i < temp.childElementCount; i++) {
         //     console.log(temp.previousElementSibling);
         // }
-        this.canvas.add(new fabric.IText(temp, { 
+        this.canvas.add(new fabric.IText(temp_text[1].textContent, { 
             left: 50,
             top: 100,
             fontFamily: 'arial black',
